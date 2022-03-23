@@ -1,33 +1,30 @@
 #include <stdio.h>
-#define _CRT_SECURE_NO_WARNINGS
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
 
-int main()
+#define S_MODE 0644
+#define BUFFER_SIZE 10
+
+int main(int argc, char* argv[])
 {
-    FILE* fp; //파일 포인터
+    char buf[BUFFER_SIZE];
+    int fd1, fd2;
+    int length;
 
-    fp = fopen("/Users/Hoon/Develope/3-1/File_Processing/exampleFile.txt", "wt");
-    float num1;
-    float num2;
-    printf("1. 숫자 입력 : ");
-    scanf("%f", &num1);
-    printf("2. 숫자 입력 : ");
-    scanf("%f", &num2);
-
-
-    if(fp == NULL)
+    if(argc != 3)
     {
-        printf("실패 - 종료\n");
-        return 1;
+        fprintf(stderr, "Follow : %s <file_in> <file_out>", argv[0]);
+        exit(1);
     }
 
-    fprintf(fp, "사칙계산 파일처리 연습\n");
-    fprintf(fp, "더하기 결과 값 : %f\n", num1+num2);
-    fprintf(fp, "빼기 결과 값 : %f\n", num1-num2);
-    fprintf(fp, "나누기 결과 값 : %f\n", num1/num2);
-    fprintf(fp, "곱하기 결과 값 : %f\n", num1*num2);
+    if((fd2 = open(argv[2], O_WRONLY | O_CREAT | O_TRUNC, S_MODE)) < 0)
+    {
+        fprintf(stderr, "open error for %s\n", argv[2]);
+        exit(1);
+    }
 
-    fclose(fp);
-
-    printf("완료");
-    return 0;
+    while((length = read(fd1, buf, BUFFER_SIZE)) > 0)
+        write(fd2, buf, length);
+    exit(0);
 }
