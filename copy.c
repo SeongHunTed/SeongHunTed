@@ -18,6 +18,12 @@ int main(int argc, char* argv[])
         exit(1);
     }
 
+    if((fd1 = open(argv[1], O_RDONLY)) < 0)
+    {
+        fprintf(stderr, "open error for %s\n", argv[1]);
+        exit(1);
+    }
+
     if((fd2 = open(argv[2], O_WRONLY | O_CREAT | O_TRUNC, S_MODE)) < 0)
     {
         fprintf(stderr, "open error for %s\n", argv[2]);
