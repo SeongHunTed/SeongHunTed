@@ -54,6 +54,7 @@ int main(int argc, char* argv[])
         exit(1);
     }
 
+    //EOF에서 Append가 되는 것인가?
     write(fd, buf, strlen(buf));
 
     exit(0);

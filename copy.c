@@ -8,7 +8,7 @@
 
 int main(int argc, char* argv[])
 {
-    char buf[BUFFER_SIZE];
+    char buf[BUFFER_SIZE] = {0};
     int fd1, fd2;
     int length;
 
@@ -29,7 +29,6 @@ int main(int argc, char* argv[])
         fprintf(stderr, "open error for %s\n", argv[2]);
         exit(1);
     }
-
     while((length = read(fd1, buf, BUFFER_SIZE)) > 0)
         write(fd2, buf, length);
     exit(0);
