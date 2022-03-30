@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
     if(write(fd1, argv[2], strlen(argv[2])) < 0)
     {
         fprintf(stderr, "Write error\n");
-        exit(0);
+        exit(1);
     }
 
     while((length = read(fd1, buf, BUFFER_SIZE)) > 0)

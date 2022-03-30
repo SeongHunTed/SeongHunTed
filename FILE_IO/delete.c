@@ -27,42 +27,57 @@ int main(int argc, char* argv[])
 
     end = (off_t)lseek(fd1, (off_t)0, SEEK_END);
 
-    if((cur = lseek(fd1, (off_t)(atoi(argv[1]) + atoi(argv[2])), SEEK_SET)) < 0)
-    {
-        fprintf(stderr, "lseek error\n");
-        exit(1);
-    }
+    cur = lseek(fd1, (off_t)(atoi(argv[1]) + atoi(argv[2])), SEEK_SET);
 
     // data 입력값 음수인 경우
     if(cur < atoi(argv[1]))
-    {
-        buf1 = (char *)calloc((int)(end - atoi(argv[1]) + 1), sizeof(char));
-        lseek(fd1, (off_t)atoi(argv[1]), SEEK_SET);
-        read(fd1, buf1, (int)(end - atoi(argv[1] + 1)));
+    {   
 
-        length = (int)lseek(fd1, cur, SEEK_SET);
+        if(atoi(argv[2]) + atoi(argv[1]) < 0)
+        {
+            buf1 = (char *)calloc((int)(end - atoi(argv[1]) + 1), sizeof(char));
+            lseek(fd1, (off_t)atoi(argv[1]), SEEK_SET);
+            read(fd1, buf1, (int)(end - atoi(argv[1]) + 1));
+            fd1 = open(argv[3], O_WRONLY | O_TRUNC);
+            lseek(fd1, (off_t)0, SEEK_SET);
+            write(fd1, buf1, strlen(buf1));
+            exit(0);
+        } else
+        {
+            buf1 = (char *)calloc((int)(end - atoi(argv[1]) + 1), sizeof(char));
+            lseek(fd1, (off_t)atoi(argv[1]), SEEK_SET);
+            read(fd1, buf1, (int)(end - atoi(argv[1] + 1)));
 
-        buf2 = (char *)calloc(length, sizeof(char));
+            length = (int)lseek(fd1, cur, SEEK_SET);
 
-        lseek(fd1, (off_t)0, SEEK_SET);
+            buf2 = (char *)calloc(length, sizeof(char));
 
-        read(fd1, buf2, length);
+            lseek(fd1, (off_t)0, SEEK_SET);
 
-        fd1 = open(argv[3], O_WRONLY | O_TRUNC);
-        lseek(fd1, (off_t)0, SEEK_SET);
-        write(fd1, buf2, length);
-        write(fd1, buf1, strlen(buf1));
-        exit(0);
+            read(fd1, buf2, length);
+
+            fd1 = open(argv[3], O_WRONLY | O_TRUNC);
+            lseek(fd1, (off_t)0, SEEK_SET);
+            write(fd1, buf2, length);
+            write(fd1, buf1, strlen(buf1));
+            exit(0);
+        }
     }
 
     // data 입력값 양수인 경우
     if(cur > atoi(argv[1]))
     {
+
+        if(cur< 0)
+        {
+            fprintf(stderr, "lseek error\n");
+            exit(1);
+        }
         buf1 = (char *)calloc((int)(end - cur + 1), sizeof(char));
-        lseek(fd1, cur, SEEK_SET); 
+        lseek(fd1, cur+1, SEEK_SET); 
         read(fd1, buf1, (int)(end - cur + 1));
         
-        length = (int)lseek(fd1, (off_t)atoi(argv[1]), SEEK_SET);
+        length = (int)lseek(fd1, (off_t)(atoi(argv[1]) + 1), SEEK_SET);
 
         buf2 = (char*)calloc(length, sizeof(char));
 

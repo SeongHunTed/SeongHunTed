@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
     end = (off_t)lseek(fd, (off_t)0, SEEK_END);
 
     // curser move
-    if((cur = lseek(fd, (off_t)atoi(argv[1]), SEEK_SET)) < 0)
+    if((cur = lseek(fd, (off_t)(atoi(argv[1]) + 1), SEEK_SET)) < 0)
     {
         fprintf(stderr, "lseek error\n");
         exit(1);
